@@ -1,10 +1,31 @@
 package main.java.assignments.assignment2;
 
 public class Menu {
-     // TODO: tambahkan attributes yang diperlukan untuk class ini
-    public Menu(String namaMakanan, double harga){
-        // TODO: buat constructor untuk class ini
+    private String namaMakanan; // Nama makanan
+    private double harga; // Harga makanan
+
+    public Menu(String namaMakanan, double harga) {
+        this.namaMakanan = namaMakanan;
+        this.harga = harga;
     }
 
-    // TODO: tambahkan methods yang diperlukan untuk class ini
+    // Method untuk mendapatkan nama makanan
+    public String getNamaMakanan() {
+        return namaMakanan;
+    }
+
+    // Method untuk mengatur nama makanan
+    public void setNamaMakanan(String namaMakanan) {
+        this.namaMakanan = namaMakanan;
+    }
+
+    // Method untuk mendapatkan harga makanan
+    public double getHarga() {
+        return harga;
+    }
+
+    // Method untuk mengatur harga makanan
+    public void setHarga(double harga) {
+        this.harga = harga;
+    }
 }
