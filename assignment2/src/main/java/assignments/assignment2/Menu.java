@@ -1,4 +1,4 @@
-package main.java.assignments.assignment2;
+package assignments.assignment2;
 
 public class Menu {
     private String namaMakanan; // Nama makanan

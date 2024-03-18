@@ -1,4 +1,4 @@
-package main.java.assignments.assignment2;
+package assignments.assignment2;
 
 import java.util.Arrays; // Mengimpor class Arrays dari package java.util
 import java.util.ArrayList;
