@@ -290,11 +290,47 @@ public class MainMenu {
 
     System.out.println("Menu: "); // Menampilkan label untuk daftar menu
 
+    // Sorting menu menggunakan bubble sort
+    ArrayList<Menu> menu = currentResto.getMenu();
+    Menu temp;
+    boolean swapped;
+    for (int i = 0; i < menu.size() - 1; i++) {
+      swapped = false;
+      for (int j = 0; j < menu.size() - i - 1; j++) {
+        if (menu.get(j).getHarga() >= menu.get(j + 1).getHarga()) {
+          // Jika terdapat harga yang sama
+          if (menu.get(j).getHarga() == menu.get(j + 1).getHarga()) {
+            // Urutkan berdasarkan urutan alfabet nama menu
+            for (int k = 0; k < menu.get(j).getNamaMakanan().length(); k++) {
+              if (menu.get(j).getNamaMakanan().charAt(k) > menu.get(j + 1).getNamaMakanan().charAt(k)) {
+                // Swap menu[j] dengan menu[j+1]
+                temp = menu.get(j);
+                menu.set(j, menu.get(j + 1));
+                menu.set(j + 1, temp);
+                swapped = true;
+                break;
+              }
+            }
+          } else {
+            // Swap menu[j] dengan menu[j+1]
+            temp = menu.get(j);
+            menu.set(j, menu.get(j + 1));
+            menu.set(j + 1, temp);
+            swapped = true;
+          }
+        }
+      }
+
+      // Jika tidak terjadi swap, break
+      if (swapped == false)
+        break;
+    }
+
     // Menampilkan daftar menu dari restoran yang dipilih
-    for (int i = 0; i < currentResto.getMenu().size(); i++) {
-      int currentHarga = (int) currentResto.getMenu().get(i).getHarga(); // Mendapatkan harga makanan
+    for (int i = 0; i < menu.size(); i++) {
+      int currentHarga = (int) menu.get(i).getHarga(); // Mendapatkan harga makanan
       // Menampilkan nomor urut, nama makanan, dan harganya
-      System.out.printf("%d. %s %d%n", i + 1, currentResto.getMenu().get(i).getNamaMakanan(), currentHarga);
+      System.out.printf("%d. %s %d%n", i + 1, menu.get(i).getNamaMakanan(), currentHarga);
     }
   }
 
