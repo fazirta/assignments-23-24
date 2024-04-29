@@ -2,8 +2,7 @@ package assignments.assignment3.systemCLI;
 
 import java.util.Scanner;
 
-//TODO: Extends abstract class yang diberikan
-public class CustomerSystemCLI {
+public class CustomerSystemCLI extends UserSystemCLI {
 
     //TODO: Tambahkan modifier dan buatlah metode ini mengoverride dari Abstract class
     boolean handleMenu(int choice){
@@ -23,7 +22,7 @@ public class CustomerSystemCLI {
 
     //TODO: Tambahkan modifier dan buatlah metode ini mengoverride dari Abstract class
     void displayMenu() {
-        System.out.println("\n--------------------------------------------");
+        System.out.println("--------------------------------------------");
         System.out.println("Pilih menu:");
         System.out.println("1. Buat Pesanan");
         System.out.println("2. Cetak Bill");
