@@ -9,15 +9,15 @@ public class LoginManager {
     private final CustomerSystemCLI customerSystem;
 
     public LoginManager(AdminSystemCLI adminSystem, CustomerSystemCLI customerSystem) {
-        this.adminSystem = adminSystem;
-        this.customerSystem = customerSystem;
+        this.adminSystem = adminSystem; // Menginisialisasi adminSystem
+        this.customerSystem = customerSystem; // Menginisialisasi customerSystem
     }
 
-    public UserSystemCLI getSystem(String role){
-        if(role == "Customer"){
-            return customerSystem;
-        }else{
-            return adminSystem;
+    public UserSystemCLI getSystem(String role) {
+        if (role.equals("Customer")) {
+            return customerSystem; // Mengembalikan customerSystem jika peran adalah "Customer"
+        } else {
+            return adminSystem; // Mengembalikan adminSystem jika peran bukan "Customer"
         }
     }
 }
