@@ -1,33 +1,77 @@
 package assignments.assignment3.core;
 
-import java.util.ArrayList; // Mengimpor class ArrayList dari package java.util
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Restaurant {
-    private String nama; // Nama restoran
-    private ArrayList<Menu> menu; // Daftar menu yang ditawarkan oleh restoran
+    private String nama;
+    private ArrayList<Menu> menu;
+    private long saldo;
 
     public Restaurant(String nama) {
         this.nama = nama;
-        menu = new ArrayList<Menu>(); // Inisialisasi ArrayList untuk menu
+        this.saldo = 0;
+        this.menu = new ArrayList<>();
     }
 
-    // Method untuk mendapatkan nama restoran
     public String getNama() {
         return nama;
     }
 
-    // Method untuk mengatur nama restoran
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void addMenu(Menu newMenu) {
+        menu.add(newMenu);
     }
 
-    // Method untuk mendapatkan daftar menu yang ditawarkan oleh restoran
     public ArrayList<Menu> getMenu() {
         return menu;
     }
 
-    // Method untuk menambahkan menu ke dalam daftar menu restoran
-    public void addMenu(Menu menu) {
-        this.menu.add(menu);
+    private ArrayList<Menu> sortMenu() {
+        // Mengurutkan menu berdasarkan harga
+        Menu[] menuArr = new Menu[menu.size()];
+        for (int i = 0; i < menu.size(); i++) {
+            menuArr[i] = menu.get(i);
+        }
+        int n = menuArr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (menuArr[j].getHarga() > menuArr[j + 1].getHarga()) {
+                    Menu temp = menuArr[j];
+                    menuArr[j] = menuArr[j + 1];
+                    menuArr[j + 1] = temp;
+                }
+            }
+        }
+        return new ArrayList<>(Arrays.asList(menuArr)); // Mengembalikan menu yang telah diurutkan
+    }
+
+    public String printMenu() {
+        // Mencetak menu yang telah diurutkan
+        StringBuilder menuString = new StringBuilder("Menu:\n");
+        DecimalFormat decimalFormat = new DecimalFormat();
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('\u0000');
+        decimalFormat.setDecimalFormatSymbols(symbols);
+        int menuNumber = 1;
+        for (Menu menuItem : sortMenu()) {
+            // Menambahkan nama dan harga menu ke dalam string
+            menuString.append(menuNumber).append(". ").append(menuItem.getNamaMakanan()).append(" ")
+                    .append(decimalFormat.format(menuItem.getHarga())).append("\n");
+            menuNumber++;
+        }
+        if (menuString.length() > 0) {
+            menuString.deleteCharAt(menuString.length() - 1);
+        }
+        return menuString.toString(); // Mengembalikan string menu yang telah diurutkan
+    }
+
+    public long getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(long saldo) {
+        this.saldo = saldo;
     }
 }

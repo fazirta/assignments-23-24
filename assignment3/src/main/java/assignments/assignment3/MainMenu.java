@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import assignments.assignment3.core.Restaurant;
 import assignments.assignment3.core.User;
-import assignments.assignment3.LoginManager;
 import assignments.assignment3.payment.CreditCardPayment;
 import assignments.assignment3.payment.DebitPayment;
 import assignments.assignment3.systemCLI.AdminSystemCLI;
@@ -20,7 +19,8 @@ public class MainMenu {
     public MainMenu(Scanner in, LoginManager loginManager) {
         this.input = in;
         this.loginManager = loginManager;
-        initUser();
+        restoList = new ArrayList<Restaurant>(); // Menginisialisasi restoList sebagai ArrayList kosong
+        initUser(); // Memanggil method initUser() untuk menginisialisasi daftar pengguna
     }
 
     public static void main(String[] args) {
@@ -30,47 +30,47 @@ public class MainMenu {
     }
 
     public void run() {
-        printHeader();
+        printHeader(); // Mencetak header
         boolean exit = false;
         while (!exit) {
             startMenu();
-            int choice = input.nextInt();
-            input.nextLine();
+            int choice = input.nextInt(); // Mendapatkan choice dari User
+            input.nextLine(); // Membersihkan newline dari input
             switch (choice) {
-                case 1 -> login();
-                case 2 -> exit = true;
-                default -> System.out.println("Pilihan tidak valid, silakan coba lagi.");
+                case 1 -> login(); // Jika pilihan adalah 1, panggil method login()
+                case 2 -> exit = true; // Jika pilihan adalah 2, set exit menjadi true untuk keluar dari loop
+                default -> System.out.println("Pilihan tidak valid, silakan coba lagi."); // Cetak pesan error
             }
         }
-
+        System.out.println("Terima kasih telah menggunakan DepeFood!"); // Cetak pesan di akhir program
         input.close();
     }
 
     private void login() {
-        System.out.println("\nSilakan Login:");
-        System.out.print("Nama: ");
-        String nama = input.nextLine();
-        System.out.print("Nomor Telepon: ");
-        String noTelp = input.nextLine();
+        System.out.println("\nSilakan Login:"); // Cetak pesan untuk meminta login
+        System.out.print("Nama: "); // Meminta input nama
+        String nama = input.nextLine(); // Membaca input nama dari user
+        System.out.print("Nomor Telepon: "); // Meminta input nomor telepon
+        String noTelp = input.nextLine(); // Membaca input nomor telepon dari user
 
-        User userLoggedIn = getUser(nama, noTelp);
+        User userLoggedIn = getUser(nama, noTelp); // Mendapatkan pengguna yang sedang login
 
-        if(userLoggedIn == null){
-            System.out.println("Pengguna dengan data tersebut tidak ditemukan!");
-        }
-        else {
-            System.out.printf("Selamat datang %s!\n", userLoggedIn.getNama());
-            loginManager.getSystem(userLoggedIn.role).run();
+        if (userLoggedIn == null) {
+            System.out.println("Pengguna dengan data tersebut tidak ditemukan!"); // Jika pengguna tidak ditemukan
+        } else {
+            System.out.printf("Selamat datang %s!\n", userLoggedIn.getNama()); // Cetak pesan selamat datang
+            loginManager.getSystem(userLoggedIn.role).run(restoList, userLoggedIn);// Jalankan sistem
         }
     }
 
-    public static User getUser(String nama, String nomorTelepon) {
-        for (User user : userList) {
+    private User getUser(String nama, String nomorTelepon) {
+        for (User user : userList) { // Melakukan iterasi pada userList
+            // Memeriksa apakah nama dan nomor telepon pengguna cocok dengan parameter
             if (user.getNama().equals(nama.trim()) && user.getNomorTelepon().equals(nomorTelepon.trim())) {
-                return user;
+                return user; // Mengembalikan pengguna jika ditemukan
             }
         }
-        return null;
+        return null; // Mengembalikan null jika pengguna tidak ditemukan
     }
 
     private static void printHeader() {
