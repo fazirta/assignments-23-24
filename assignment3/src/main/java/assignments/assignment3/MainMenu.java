@@ -3,18 +3,17 @@ package assignments.assignment3;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import assignments.assignment3.core.Restaurant;
-import assignments.assignment3.core.User;
 import assignments.assignment3.payment.CreditCardPayment;
 import assignments.assignment3.payment.DebitPayment;
 import assignments.assignment3.systemCLI.AdminSystemCLI;
 import assignments.assignment3.systemCLI.CustomerSystemCLI;
+import assignments.assignment3.systemCLI.UserSystemCLI;
 
 public class MainMenu {
     private final Scanner input;
     private final LoginManager loginManager;
-    private static ArrayList<Restaurant> restoList;
     private static ArrayList<User> userList;
+    private static ArrayList<Restaurant> restoList;
 
     public MainMenu(Scanner in, LoginManager loginManager) {
         this.input = in;
@@ -24,13 +23,18 @@ public class MainMenu {
     }
 
     public static void main(String[] args) {
+        initUser();
+
+        restoList = new ArrayList<>();
+
         MainMenu mainMenu = new MainMenu(new Scanner(System.in),
                 new LoginManager(new AdminSystemCLI(), new CustomerSystemCLI()));
+
         mainMenu.run();
     }
 
     public void run() {
-        printHeader(); // Mencetak header
+        printHeader();
         boolean exit = false;
         while (!exit) {
             startMenu();
@@ -47,30 +51,40 @@ public class MainMenu {
     }
 
     private void login() {
-        System.out.println("\nSilakan Login:"); // Cetak pesan untuk meminta login
-        System.out.print("Nama: "); // Meminta input nama
-        String nama = input.nextLine(); // Membaca input nama dari user
-        System.out.print("Nomor Telepon: "); // Meminta input nomor telepon
-        String noTelp = input.nextLine(); // Membaca input nomor telepon dari user
+        UserSystemCLI system;
+        System.out.println("\nSilakan Login:");
+        System.out.print("Nama: ");
+        String nama = input.nextLine();
+        System.out.print("Nomor Telepon: ");
+        String noTelp = input.nextLine();
 
-        User userLoggedIn = getUser(nama, noTelp); // Mendapatkan pengguna yang sedang login
+        User userLoggedIn = getUser(nama, noTelp);
 
         if (userLoggedIn == null) {
-            System.out.println("Pengguna dengan data tersebut tidak ditemukan!"); // Jika pengguna tidak ditemukan
-        } else {
-            System.out.printf("Selamat datang %s!\n", userLoggedIn.getNama()); // Cetak pesan selamat datang
-            loginManager.getSystem(userLoggedIn.role).run(restoList, userLoggedIn);// Jalankan sistem
+            System.out.println("Pengguna dengan data tersebut tidak ditemukan!");
+            return;
         }
+
+        System.out.printf("Selamat Datang %s!%n", userLoggedIn.getNama());
+
+        system = loginManager.getSystem(userLoggedIn.role);
+
+        system.setInput(input);
+        system.setUserLoggedIn(userLoggedIn);
+        system.setRestoList(restoList);
+        system.setUserList(userList);
+
+        system.run();
     }
 
-    private User getUser(String nama, String nomorTelepon) {
-        for (User user : userList) { // Melakukan iterasi pada userList
-            // Memeriksa apakah nama dan nomor telepon pengguna cocok dengan parameter
+    public static User getUser(String nama, String nomorTelepon) {
+
+        for (User user : userList) {
             if (user.getNama().equals(nama.trim()) && user.getNomorTelepon().equals(nomorTelepon.trim())) {
-                return user; // Mengembalikan pengguna jika ditemukan
+                return user;
             }
         }
-        return null; // Mengembalikan null jika pengguna tidak ditemukan
+        return null;
     }
 
     private static void printHeader() {
@@ -84,7 +98,7 @@ public class MainMenu {
     }
 
     private static void startMenu() {
-        System.out.println("\nSelamat datang di DepeFood!");
+        System.out.println("Selamat datang di DepeFood!");
         System.out.println("--------------------------------------------");
         System.out.println("Pilih menu:");
         System.out.println("1. Login");
@@ -94,7 +108,7 @@ public class MainMenu {
     }
 
     public static void initUser() {
-        userList = new ArrayList<User>();
+        userList = new ArrayList<>();
 
         userList.add(
                 new User("Thomas N", "9928765403", "thomas.n@gmail.com", "P", "Customer", new DebitPayment(), 500000));
