@@ -14,7 +14,7 @@ import assignments.assignment3.payment.DepeFoodPaymentSystem;
 public class CustomerSystemCLI extends UserSystemCLI {
 
     @Override
-    boolean handleMenu(int choice) {
+    boolean handleMenu(int choice, ArrayList<Restaurant> restoList) {
         switch (choice) {
             case 1 -> handleBuatPesanan();
             case 2 -> handleCetakBill();

@@ -30,7 +30,7 @@ public abstract class UserSystemCLI {
 
     abstract void displayMenu();
 
-    abstract boolean handleMenu(int command);
+    abstract boolean handleMenu(int command, ArrayList<Restaurant> restoList);
 
     protected boolean checkIsDigit(String digits) {
         return digits.chars().allMatch(Character::isDigit);

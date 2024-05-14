@@ -1,5 +1,6 @@
 package assignments.assignment3.systemCLI;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import assignments.assignment3.Menu;
@@ -8,7 +9,7 @@ import assignments.assignment3.Restaurant;
 public class AdminSystemCLI extends UserSystemCLI {
 
     @Override
-    boolean handleMenu(int command) {
+    boolean handleMenu(int command, ArrayList<Restaurant> restoList) {
         switch (command) {
             case 1 -> handleTambahRestoran();
             case 2 -> handleHapusRestoran();
