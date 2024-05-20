@@ -51,7 +51,7 @@ public class MainApp extends Application {
         return allScenes.get(sceneName);
     }
 
-    public void addScene(String sceneName, Scene scene){
+    public void addScene(String sceneName, Scene scene) {
         allScenes.put(sceneName, scene);
     }
 

@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class CustomerMenu extends MemberMenu {
+    // Atribut-atribut yang diperlukan untuk menu pelanggan
     private Stage stage;
     private Scene scene;
     private Scene addOrderScene;
@@ -56,17 +57,23 @@ public class CustomerMenu extends MemberMenu {
     private static Label balanceLabel = new Label();
     private DropShadow dropShadow = new DropShadow();
 
+    // Konstruktor untuk inisialisasi menu pelanggan
     public CustomerMenu(Stage stage, MainApp mainApp, User user) {
         this.stage = stage;
         this.mainApp = mainApp;
         this.user = user;
+        // Membuat tampilan menu dasar dan tampilan tambah pesanan
         this.scene = createBaseMenu();
         this.addOrderScene = createTambahPesananForm();
+        // Membuat objek BillPrinter untuk mencetak tagihan
         this.billPrinter = new BillPrinter(stage, mainApp, this.user);
+        // Membuat tampilan cetak tagihan dan tampilan bayar tagihan
         printBillScene = createBillPrinter();
         this.payBillScene = createBayarBillForm();
+        // Membuat tampilan cek saldo
         this.cekSaldoScene = createCekSaldoScene();
 
+        // Konfigurasi bayangan untuk elemen-elemen GUI
         dropShadow.setRadius(15);
         dropShadow.setOffsetX(2);
         dropShadow.setOffsetY(2);
@@ -74,6 +81,7 @@ public class CustomerMenu extends MemberMenu {
     }
 
     @Override
+    // Membuat tampilan dasar menu pelanggan
     public Scene createBaseMenu() {
         Label addOrderTitleLabel = new Label("Add Order");
         addOrderTitleLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: bold;");
@@ -84,6 +92,7 @@ public class CustomerMenu extends MemberMenu {
         addOrderDescriptionLabel.setMaxWidth(360);
         addOrderDescriptionLabel.setStyle("-fx-font-size: 16px;");
 
+        // Tombol untuk menambahkan pesanan baru
         Button addOrderButton = new Button("🛒  Add Order");
         addOrderButton.setStyle("-fx-font-size: 14px; " +
                 "-fx-cursor: hand;" +
@@ -722,19 +731,25 @@ public class CustomerMenu extends MemberMenu {
 
     private void handleBuatPesanan(String namaRestoran, String tanggalPemesanan, List<String> menuItems) {
         try {
+            // Mencari restoran berdasarkan nama
             Restaurant restaurant = DepeFood.findRestaurant(namaRestoran);
             String OrderID = OrderGenerator.generateOrderID(namaRestoran, tanggalPemesanan, user.getNomorTelepon());
+            // Membuat objek pesanan dengan informasi yang diberikan
             Order order = new Order(
                     OrderID,
                     tanggalPemesanan, OrderGenerator.calculateDeliveryCost(user.getLokasi()),
                     restaurant, DepeFood.getMenuRequest(restaurant, menuItems));
+            // Menambahkan pesanan ke riwayat pesanan pengguna
             user.addOrderHistory(order);
+            // Menampilkan pemberitahuan sukses dengan ID pesanan yang baru saja dibuat
             showAlert("Success", "Order Placed Successfully",
                     "Your order with ID " + OrderID + " has been placed successfully.", Alert.AlertType.INFORMATION);
+            // Mengosongkan pilihan restoran, tanggal pemesanan, dan daftar menu
             restaurantComboBox.valueProperty().set(null);
             orderDatePicker.setValue(null);
             menuItemsListView.getItems().clear();
         } catch (Exception e) {
+            // Menampilkan pemberitahuan jika terjadi kesalahan saat menambahkan pesanan
             showAlert("Error", "Failed to Add Order",
                     "An error occurred while adding the order. Please try again later.", Alert.AlertType.ERROR);
         }
@@ -742,33 +757,42 @@ public class CustomerMenu extends MemberMenu {
 
     private void handleBayarBill(String orderID, int pilihanPembayaran) {
         try {
+            // Mendapatkan pesanan berdasarkan ID
             Order order = DepeFood.getOrderOrNull(orderID);
+            // Memeriksa apakah pesanan sudah selesai atau belum
             if (!order.getOrderFinished()) {
+                // Memeriksa jenis pembayaran yang dipilih pengguna
                 DepeFoodPaymentSystem paymentSystem = user.getPaymentSystem();
                 boolean isCreditCard = paymentSystem instanceof CreditCardPayment;
+                // Menampilkan pemberitahuan jika jenis pembayaran tidak sesuai
                 if ((isCreditCard && pilihanPembayaran == 1) ||
                         (!isCreditCard && pilihanPembayaran == 0)) {
                     showAlert("Error", "Failed to Pay Bill",
                             "Payment failed. Please check your payment method and try again.", Alert.AlertType.ERROR);
                 } else {
+                    // Memproses pembayaran dan mengurangi saldo pengguna
                     long amountToPay = paymentSystem.processPayment(user.getSaldo(), (long) order.getTotalHarga());
                     long saldoLeft = user.getSaldo() - amountToPay;
                     user.setSaldo(saldoLeft);
+                    // Memperbarui status pesanan
                     DepeFood.handleUpdateStatusPesanan(order);
+                    // Menampilkan pemberitahuan pembayaran berhasil
                     showAlert("Success", "Payment Successful",
-                            "Payment was successful. Thank you for your transaction.",
-                            Alert.AlertType.INFORMATION);
+                            "Payment was successful. Thank you for your transaction.", Alert.AlertType.INFORMATION);
                 }
             } else {
+                // Menampilkan pemberitahuan jika pesanan sudah selesai
                 showAlert("Error", "Order Finished",
                         "This order has already been finished. Payment cannot be processed.", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
+            // Menampilkan pemberitahuan jika terjadi kesalahan saat pembayaran
             showAlert("Error", "Failed to Pay Bill", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     public static void animation() {
+        // Animasi fading untuk layout menu
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(175), menuLayout);
         fadeTransition.setToValue(1);
         fadeTransition.setCycleCount(1);
@@ -776,6 +800,7 @@ public class CustomerMenu extends MemberMenu {
     }
 
     public static void printBillAnimation() {
+        // Animasi fading untuk layout cetak tagihan
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(175), printBillLayout);
         fadeTransition.setToValue(1);
         fadeTransition.setCycleCount(1);

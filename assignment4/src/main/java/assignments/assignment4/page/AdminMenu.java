@@ -39,27 +39,28 @@ public class AdminMenu extends MemberMenu {
         private Scene viewRestaurantsScene;
         private MainApp mainApp;
         private ListView<String> menuItemsListView = new ListView<>();
-        private TextField addRestaurantInput = new TextField();;
-        private TextField addMenuRestaurantNameInput = new TextField();;
-        private TextField addMenuNameInput = new TextField();;
-        private TextField addMenuPriceInput = new TextField();;
-        private TextField searchRestaurantInput = new TextField();;
+        private TextField addRestaurantInput = new TextField();; // Input untuk nama restoran
+        private TextField addMenuRestaurantNameInput = new TextField();; // Input untuk nama restoran pada tambah menu
+        private TextField addMenuNameInput = new TextField();; // Input untuk nama menu
+        private TextField addMenuPriceInput = new TextField();; // Input untuk harga menu
+        private TextField searchRestaurantInput = new TextField();; // Input untuk pencarian restoran
         private DropShadow dropShadow = new DropShadow();
         private static GridPane menuLayout = new GridPane();
 
         public AdminMenu(Stage stage, MainApp mainApp, User user) {
-                this.stage = stage;
-                this.mainApp = mainApp;
-                this.user = user;
-                this.scene = createBaseMenu();
-                this.addRestaurantScene = createAddRestaurantForm();
-                this.addMenuScene = createAddMenuForm();
-                this.viewRestaurantsScene = createViewRestaurantsForm();
+                this.stage = stage; // Mengatur stage dari aplikasi
+                this.mainApp = mainApp; // Mengatur mainApp dari aplikasi
+                this.user = user; // Mengatur pengguna yang saat ini masuk
+                this.scene = createBaseMenu(); // Membuat tampilan dasar menu admin
+                this.addRestaurantScene = createAddRestaurantForm(); // Membuat tampilan form tambah restoran
+                this.addMenuScene = createAddMenuForm(); // Membuat tampilan form tambah menu
+                this.viewRestaurantsScene = createViewRestaurantsForm(); // Membuat tampilan daftar menu restoran
 
+                // Mengatur efek bayangan yang akan digunakan
                 dropShadow.setRadius(15);
                 dropShadow.setOffsetX(2);
                 dropShadow.setOffsetY(2);
-                dropShadow.setColor(Color.rgb(225, 225, 225, 0.8));
+                dropShadow.setColor(Color.rgb(225, 225, 225, 0.8)); // Warna efek bayangan
         }
 
         @Override
@@ -535,36 +536,40 @@ public class AdminMenu extends MemberMenu {
         }
 
         private void handleTambahRestoran(String nama) {
-                String validName = DepeFood.getValidRestaurantName(nama);
-                if (!validName.equals(nama)) {
+                String validName = DepeFood.getValidRestaurantName(nama); // Mendapatkan nama restoran yang valid
+                if (!validName.equals(nama)) { // Jika nama yang diberikan tidak valid
+                        // Menampilkan pesan kesalahan
                         showAlert("Invalid Input", "Invalid Restaurant Name",
                                         "The restaurant name provided is not valid. Please enter a valid name.",
                                         Alert.AlertType.ERROR);
                 } else {
-                        DepeFood.handleTambahRestoran(nama);
+                        DepeFood.handleTambahRestoran(nama); // Menambahkan restoran ke daftar restoran
+                        // Menampilkan pesan sukses
                         showAlert("Success", "Restaurant Added Successfully",
                                         "The restaurant '" + nama + "' has been successfully added.",
                                         Alert.AlertType.INFORMATION);
-                        addRestaurantInput.clear();
+                        addRestaurantInput.clear(); // Membersihkan input nama restoran setelah penambahan
                 }
         }
 
         private void handleTambahMenuRestoran(Restaurant restaurant, String itemName, double price) {
-                if (itemName.length() > 0) {
-                        DepeFood.handleTambahMenuRestoran(restaurant, itemName, price);
+                if (itemName.length() > 0) { // Jika nama menu tidak kosong
+                        DepeFood.handleTambahMenuRestoran(restaurant, itemName, price); // Menambahkan menu ke restoran
+                        // Menampilkan pesan sukses
                         showAlert("Success", "Menu Added Successfully",
                                         "The menu item '" + itemName + "' with price Rp" + price + " has been added to "
                                                         +
                                                         restaurant.getNama() + " restaurant.",
                                         Alert.AlertType.INFORMATION);
 
+                        // Membersihkan input setelah penambahan menu
                         addMenuRestaurantNameInput.clear();
                         addMenuNameInput.clear();
                         addMenuPriceInput.clear();
                 } else {
+                        // Menampilkan pesan kesalahan jika nama menu kosong
                         showAlert("Invalid Input", "Invalid Menu Item", "Please enter a valid name for the menu item.",
                                         Alert.AlertType.ERROR);
-
                 }
         }
 
